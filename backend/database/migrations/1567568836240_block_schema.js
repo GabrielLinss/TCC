@@ -3,22 +3,20 @@
 /** @type {import('@adonisjs/lucid/src/Schema')} */
 const Schema = use('Schema')
 
-class RoomSchema extends Schema {
+class BlockSchema extends Schema {
   up () {
-    this.create('rooms', (table) => {
+    this.create('blocks', (table) => {
       table.increments()
-      table.integer('fk_block_id').unsigned().references('id').inTable('blocks').onDelete('SET NULL')
       table.string('name')
       table.integer('number')
-      table.integer('capacity')
       table.boolean('available').defaultTo(true)
       table.timestamps()
     })
   }
 
   down () {
-    this.drop('rooms')
+    this.drop('blocks')
   }
 }
 
-module.exports = RoomSchema
+module.exports = BlockSchema

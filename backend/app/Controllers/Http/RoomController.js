@@ -2,7 +2,8 @@
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
-/** @typedef {import('@adonisjs/framework/src/View')} View */
+
+const Room = use('App/Models/Room')
 
 /**
  * Resourceful controller for interacting with rooms
@@ -15,21 +16,12 @@ class RoomController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
-  }
+  async index ({ request }) {
+    const { page, limit } = request.get()
+    const query = Room.query()
 
-  /**
-   * Render a form to be used for creating a new room.
-   * GET rooms/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+    return await query.paginate(page || 1, limit || 5)
   }
 
   /**
@@ -41,6 +33,11 @@ class RoomController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
+    const data = request.post()
+    const room = await Room.create(data)
+    if (!room) return response.status(400).json([{ message: 'Erro ao cadastrar sala' }])
+
+    return response.json(room)
   }
 
   /**
@@ -50,21 +47,12 @@ class RoomController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
-  }
+  async show ({ params, response }) {
+    const room = await Room.findBy('id', params.id)
+    if (!room) return response.status(404).json([{ message: 'Sala não encontrada' }])
 
-  /**
-   * Render a form to update an existing room.
-   * GET rooms/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
+    return response.json(room)
   }
 
   /**
@@ -76,6 +64,14 @@ class RoomController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
+    const room = await Room.findBy('id', params.id)
+    if (!room) return response.status(404).json([{ message: 'Sala não encontrada' }])
+
+    const data = request.only(['name', 'fk_block_id', 'available', 'capacity'])
+    await room.merge(data)
+    await room.save()
+
+    return response.json(room)
   }
 
   /**
@@ -86,7 +82,13 @@ class RoomController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
+  async destroy ({ params, response }) {
+    const room = await Room.findBy('id', params.id)
+    if (!room) return response.status(404).json([{ message: 'Sala não encontrada' }])
+
+    await room.delete()
+
+    return response.noContent()
   }
 }
 
