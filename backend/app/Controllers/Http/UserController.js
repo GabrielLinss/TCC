@@ -49,7 +49,7 @@ class UserController {
    * @param {Response} ctx.response
    */
   async show ({ params, response }) {
-    const user = await User.findBy('id', params.id)
+    const user = await User.query().where('id', params.id).with('useraccesshistories').first()
     if (!user) return response.status(404).json([{ message: 'Usuário não encontrado' }])
 
     return response.json(user)

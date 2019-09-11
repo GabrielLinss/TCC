@@ -6,13 +6,13 @@ const Schema = use('Schema')
 class UserSchema extends Schema {
   up () {
     this.table('users', (table) => {
-      table.integer('fk_role_id').unsigned().references('id').inTable('roles')
+      table.integer('role_id').unsigned().references('id').inTable('roles')
     })
   }
 
   down () {
     this.table('users', (table) => {
-      table.dropColumn('fk_role_id')
+      table.dropColumn('role_id')
     })
   }
 }

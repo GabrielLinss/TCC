@@ -20,6 +20,7 @@ class BlockController {
   async index ({ request }) {
     const { page, limit } = request.get()
     const query = Block.query()
+    query.with('rooms')
 
     return await query.paginate(page || 1, limit || 5)
   }
@@ -49,7 +50,7 @@ class BlockController {
    * @param {Response} ctx.response
    */
   async show ({ params, response }) {
-    const block = await Block.findBy('id', params.id)
+    const block = await Block.query().where('id', params.id).with('rooms').first()
     if (!block) return response.status(404).json([{ message: 'Bloco não encontrado' }])
 
     return response.json(block)

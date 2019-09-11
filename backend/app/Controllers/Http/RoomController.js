@@ -20,6 +20,7 @@ class RoomController {
   async index ({ request }) {
     const { page, limit } = request.get()
     const query = Room.query()
+    query.with('block')
 
     return await query.paginate(page || 1, limit || 5)
   }
@@ -49,7 +50,7 @@ class RoomController {
    * @param {Response} ctx.response
    */
   async show ({ params, response }) {
-    const room = await Room.findBy('id', params.id)
+    const room = await Room.query().where('id', params.id).with('block').first()
     if (!room) return response.status(404).json([{ message: 'Sala não encontrada' }])
 
     return response.json(room)

@@ -25,9 +25,8 @@ class AuthController {
         if (!user) return response.status(404).json([{ message: 'Email não encontrado' }])
 
         const token = await auth.withRefreshToken().attempt(user.email, data.password)
-        if (!token) return response.status(404).json([{ message: 'Erro ao tentar realizar login' }])
 
-        await UserAccessHistory.create({ fk_user_id: user.id })
+        await UserAccessHistory.create({ user_id: user.id })
 
         return { ...token, user }
     }
