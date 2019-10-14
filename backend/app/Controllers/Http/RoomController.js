@@ -68,7 +68,7 @@ class RoomController {
     const room = await Room.findBy('id', params.id)
     if (!room) return response.status(404).json([{ message: 'Sala não encontrada' }])
 
-    const data = request.only(['name', 'fk_block_id', 'available', 'capacity'])
+    const data = request.only(['name', 'fk_block_id', 'available', 'capacity', 'number'])
     await room.merge(data)
     await room.save()
 

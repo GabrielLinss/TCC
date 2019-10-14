@@ -27,4 +27,6 @@ Route.group(() => {
   Route.delete('blocks/:id', 'BlockController.destroy')
 
   Route.resource('users', 'UserController')
+
+  Route.resource('reservations', 'ReservationController')
 }).prefix('api/v1').middleware('auth')

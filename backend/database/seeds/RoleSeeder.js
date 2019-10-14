@@ -16,11 +16,11 @@ const Role = use('App/Models/Role')
 
 class RoleSeeder {
   async run () {
-    await Role.create({ name: 'Student' })
-    await Role.create({ name: 'Teacher' })
-    await Role.create({ name: 'Server' })
-    await Role.create({ name: 'Adm' })
-    await Role.create({ name: 'Adm_Master' })
+    await Role.create({ type: 'Student' })
+    await Role.create({ type: 'Teacher' })
+    await Role.create({ type: 'Server' })
+    await Role.create({ type: 'Adm' })
+    await Role.create({ type: 'Adm_Master' })
   }
 }
 

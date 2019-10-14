@@ -7,6 +7,10 @@ const Model = use('Model')
 const Hash = use('Hash')
 
 class User extends Model {
+  static get hidden () {
+    return ['password']
+  }
+
   static boot () {
     super.boot()
 
@@ -37,6 +41,10 @@ class User extends Model {
 
   useraccesshistories () {
     return this.hasMany('App/Models/UserAccessHistory')
+  }
+
+  reservations () {
+    return this.hasMany('App/Models/Reservation')
   }
 }
 
