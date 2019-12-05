@@ -3,6 +3,7 @@
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const User = use('App/Models/User')
 
 /**
@@ -15,7 +16,6 @@ class UserController {
    *
    * @param {object} ctx
    * @param {Request} ctx.request
-   * @param {Response} ctx.response
    */
   async index ({ request }) {
     const { page, limit } = request.get()
@@ -45,7 +45,6 @@ class UserController {
    * GET users/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
   async show ({ params, response }) {
@@ -79,7 +78,6 @@ class UserController {
    * DELETE users/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
   async destroy ({ params, response }) {

@@ -12,7 +12,7 @@ class UserSchema extends Schema {
 
   down () {
     this.table('users', (table) => {
-      table.dropColumn('role_id')
+      //drop column
     })
   }
 }

@@ -3,40 +3,54 @@ import Navbar from '../../components/navbar'
 import Jumbotron from '../../components/jumbotron'
 import Card from '../../components/card'
 import api from '../../services/api'
+import { isAuthenticated } from '../../services/auth'
 
 export default class Home extends Component {
   state = {
-    rooms: [],
+    reservations: [],
   }
 
-  loadRooms = async () => {
-    const response = await api.get('/rooms')
+  loadReservations = async () => {
+    const response = await api.get('/reservations')
 
-    this.setState({ rooms: response.data.data })
+    this.setState({ reservations: response.data })
   }
 
   componentDidMount () {
-    this.loadRooms()
+    this.loadReservations()
   }
 
   render() {
     return (
       <Fragment>
         <Navbar />
-        
+
         <div className="container">
+          { isAuthenticated() ? '' :
           <div className="row">
             <div className="col-md-12 col-xs-12">
               <Jumbotron />
             </div>
           </div>
+          }
 
           <div className="row">
-            { this.state.rooms.map(room => (
-              <div className="col-md-3 col-xs-12 col-sm-6" key={room.id}>
-                <Card link={`http://${window.location.host}/room/${room.id}`} buttonName="Visualizar sala" name={room.name} number={room.number} capacity={room.capacity} blockName={room.block.name} blockNumber={room.block.number} available={room.available} />
+            { this.state.reservations.length > 0 ? this.state.reservations.map(reservation => (
+              <div className="col-md-3 col-xs-12 col-sm-6" key={reservation.id}>
+                <Card link={`http://${window.location.host}/room/${reservation.room.id}`}
+                withoutButton={true} name={reservation.room.name} number={reservation.room.number}
+                capacity={reservation.room.capacity} blockName={reservation.room.block.name}
+                blockNumber={reservation.room.block.number}
+                available={reservation.room.available}
+                teacher={reservation.user.username}
+                discipline={reservation.discipline}
+                startAt={reservation.start_at}
+                endAt={reservation.end_at}/>
               </div>
-            )) }
+            )) :
+              <div className="col-md-12">
+                <h5>Nenhuma alocação ou reserva.</h5>
+              </div> }
           </div>
         </div>
       </Fragment>

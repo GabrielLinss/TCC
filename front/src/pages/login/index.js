@@ -21,10 +21,10 @@ class Login extends Component {
     } else {
       try {
         const response = await api.post('login', { email, password })
-        login(response.data.token)
+        login(response.data.token, response.data.refreshToken, response.data.user.id, response.data.user.username, response.data.user.role_id)
         this.props.history.push('/app')
       } catch (err) {
-        this.setState({ error: 'Houve um problema com o login, verifique suas credenciais!' })
+        this.setState({ error: err.response.data[0].message })
       }
     }
   }
@@ -32,7 +32,7 @@ class Login extends Component {
   render() {
     return (
       <Fragment>
-        <Navbar />
+        <Navbar page="Login" />
         <br/>
         <br/>
         <br/>

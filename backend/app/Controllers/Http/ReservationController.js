@@ -3,7 +3,10 @@
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Reservation = use('App/Models/Reservation')
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
+const Solicitation = use('App/Models/Solicitation')
 
 /**
  * Resourceful controller for interacting with reservations
@@ -15,13 +18,15 @@ class ReservationController {
    *
    * @param {object} ctx
    * @param {Request} ctx.request
-   * @param {Response} ctx.response
    */
   async index ({ request }) {
     const { user_id } = request.get()
 
     const query = Reservation.query()
     if (user_id) query.where('user_id', user_id)
+
+    query.with('room.block')
+    query.with('user')
 
     return await query.fetch()
   }
@@ -37,6 +42,14 @@ class ReservationController {
   async store ({ request, response }) {
     const data = request.post()
 
+    const exists = await Reservation.query()
+                                    .where('room_id', data.room_id)
+                                    .where('start_at', data.start_at)
+                                    .where('end_at', data.end_at)
+                                    .first()
+
+    if (exists) return response.status(400).json([{ message: 'Já existe uma reserva com esta sala neste horário' }])
+
     const reservation = await Reservation.create(data)
     if (!reservation) return response.status(400).json([{ message: 'Erro ao fazer reserva' }])
 
@@ -48,10 +61,9 @@ class ReservationController {
    * GET reservations/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async show ({ params, request, response }) {
+  async show ({ params, response }) {
     const reservation = await Reservation.query().where('id', params.id).first()
     if (!reservation) return response.status(404).json([{ message: 'Reserva não encontrada' }])
 
@@ -67,6 +79,15 @@ class ReservationController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
+    const reservation = await Reservation.query().where('id', params.id).first()
+    if (!reservation) return response.status(404).json([{ message: 'Reserva não encontrada' }])
+
+    const data = request.only(['discipline'])
+
+    reservation.merge(data)
+    await reservation.save()
+
+    return response.json(reservation)
   }
 
   /**
@@ -78,6 +99,12 @@ class ReservationController {
    * @param {Response} ctx.response
    */
   async destroy ({ params, request, response }) {
+    const reservation = await Reservation.query().where('id', params.id).first()
+    if (!reservation) return response.status(404).json([{ message: 'Reserva não encontrada' }])
+
+    await reservation.delete()
+
+    return response.noContent()
   }
 }
 

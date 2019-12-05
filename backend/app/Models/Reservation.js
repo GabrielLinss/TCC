@@ -4,6 +4,13 @@
 const Model = use('Model')
 
 class Reservation extends Model {
+	room () {
+		return this.belongsTo('App/Models/Room')
+	}
+
+	user () {
+		return this.belongsTo('App/Models/User')
+	}
 }
 
 module.exports = Reservation

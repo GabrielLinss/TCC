@@ -3,6 +3,7 @@
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Room = use('App/Models/Room')
 
 /**
@@ -15,7 +16,6 @@ class RoomController {
    *
    * @param {object} ctx
    * @param {Request} ctx.request
-   * @param {Response} ctx.response
    */
   async index ({ request }) {
     const { page, limit } = request.get()
@@ -35,10 +35,13 @@ class RoomController {
    */
   async store ({ request, response }) {
     const data = request.post()
+    const exists = await Room.query().where('block_id', data.block_id).where('number', data.number).first()
+    if (exists) return response.status(400).json([{ message: 'Sala já cadastrada' }])
+
     const room = await Room.create(data)
     if (!room) return response.status(400).json([{ message: 'Erro ao cadastrar sala' }])
 
-    return response.json(room)
+    return response.status(201).json(room)
   }
 
   /**
@@ -46,7 +49,6 @@ class RoomController {
    * GET rooms/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
   async show ({ params, response }) {
@@ -68,8 +70,9 @@ class RoomController {
     const room = await Room.findBy('id', params.id)
     if (!room) return response.status(404).json([{ message: 'Sala não encontrada' }])
 
-    const data = request.only(['name', 'fk_block_id', 'available', 'capacity', 'number'])
-    await room.merge(data)
+    const data = request.only(['name', 'block_id', 'available', 'capacity', 'number'])
+
+    room.merge(data)
     await room.save()
 
     return response.json(room)
@@ -80,7 +83,6 @@ class RoomController {
    * DELETE rooms/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
   async destroy ({ params, response }) {

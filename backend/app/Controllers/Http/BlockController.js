@@ -3,6 +3,7 @@
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Block = use('App/Models/Block')
 
 /**
@@ -14,15 +15,12 @@ class BlockController {
    * GET blocks
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
    */
-  async index ({ request }) {
-    const { page, limit } = request.get()
+  async index () {
     const query = Block.query()
     query.with('rooms')
 
-    return await query.paginate(page || 1, limit || 5)
+    return await query.fetch()
   }
 
   /**
@@ -46,7 +44,6 @@ class BlockController {
    * GET blocks/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
   async show ({ params, response }) {
@@ -80,10 +77,9 @@ class BlockController {
    * DELETE blocks/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
+  async destroy ({ params, response }) {
     const block = await Block.findBy('id', params.id)
     if (!block) return response.status(404).json([{ message: 'Bloco não encontrado' }])
 
