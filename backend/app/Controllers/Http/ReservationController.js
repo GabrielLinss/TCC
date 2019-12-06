@@ -20,10 +20,16 @@ class ReservationController {
    * @param {Request} ctx.request
    */
   async index ({ request }) {
-    const { user_id } = request.get()
+    const { user_id, withDay } = request.get()
 
     const query = Reservation.query()
     if (user_id) query.where('user_id', user_id)
+
+    if (withDay == 'true') {
+      query.whereNotNull('day')
+    } else if (withDay == 'false') {
+      query.whereNull('day')
+    }
 
     query.with('room.block')
     query.with('user')
@@ -42,13 +48,25 @@ class ReservationController {
   async store ({ request, response }) {
     const data = request.post()
 
-    const exists = await Reservation.query()
+    let exists
+
+    if (data.start_at && data.end_at) {
+      exists = await Reservation.query()
                                     .where('room_id', data.room_id)
                                     .where('start_at', data.start_at)
                                     .where('end_at', data.end_at)
                                     .first()
 
-    if (exists) return response.status(400).json([{ message: 'Já existe uma reserva com esta sala neste horário' }])
+      if (exists) return response.status(400).json([{ message: 'Já existe uma reserva com esta sala neste horário' }])
+    } else if (data.allocation_hour) {
+      exists = await Reservation.query()
+                                    .where('room_id', data.room_id)
+                                    .where('allocation_hour', data.allocation_hour)
+                                    .where('day', data.day)
+                                    .first()
+
+      if (exists) return response.status(400).json([{ message: 'Já existe uma alocação para esta sala neste horário' }])
+    }
 
     const reservation = await Reservation.create(data)
     if (!reservation) return response.status(400).json([{ message: 'Erro ao fazer reserva' }])

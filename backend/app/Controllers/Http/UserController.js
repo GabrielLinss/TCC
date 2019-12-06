@@ -18,10 +18,14 @@ class UserController {
    * @param {Request} ctx.request
    */
   async index ({ request }) {
-    const { page, limit } = request.get()
+    const { role_id } = request.get()
     const query = User.query()
 
-    return await query.paginate(page || 1, limit || 5)
+    if (role_id) {
+      query.whereIn('role_id', [5, role_id])
+    }
+
+    return await query.fetch()
   }
 
   /**
