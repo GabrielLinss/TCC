@@ -29,6 +29,7 @@ const Routes = () => (
       <PrivateRoute path="/app" component={App} />
       <PrivateRoute path="/reservation/:id" component={Reservation} />
       <PrivateRoute path="/solicitation/:id" component={Reservation} />
+      <PrivateRoute path="/allocation/:allocateId" component={Reservation} />
       <PrivateRoute path="/saveRoom" component={SaveRoom} />
       <Route exact path="/room/:id" component={Room} />
       <Route path="*" component={() => <h1>Page not found</h1>} />

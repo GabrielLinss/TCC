@@ -115,7 +115,7 @@ export default class App extends Component {
             </div>
             : this.state.solicitations.map(solicitation => (
                 <div className="col-md-3 col-xs-12 col-sm-6" key={solicitation.id}>
-                  { getUserRole() == '5' ?
+                  { getUserRole() === '5' ?
                     <Card
                       link=""
                       cancel={() => this.cancelSolicitation(solicitation.id)}
@@ -180,6 +180,8 @@ export default class App extends Component {
                     discipline={reservation.discipline}
                     startAt={reservation.start_at}
                     endAt={reservation.end_at}
+                    day={reservation.day}
+                    allocation_hour={reservation.allocation_hour}
                     />
                 </div>
             )) }
@@ -196,7 +198,9 @@ export default class App extends Component {
                 <>
                 { getUserRole() === '5' ?
                 <div className="col-md-3 col-xs-12 col-sm-6" key={room.id}>
-                    <Card editLink={`http://${window.location.host}/room/${room.id}`}
+                    <Card allocate={true}
+                    allocateLink={`http://${window.location.host}/allocation/${room.id}`}
+                    editLink={`http://${window.location.host}/room/${room.id}`}
                     link={`http://${window.location.host}/reservation/${room.id}`}
                     buttonName="Reservar" name={room.name} number={room.number}
                     capacity={room.capacity} blockName={room.block.name}

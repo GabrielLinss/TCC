@@ -3,6 +3,7 @@ import convertMonth from '../../util/convertMonth'
 
 export default function card (props) {
     const available = props.available === 1 ? 'bg-success' : 'bg-danger'
+
     let withoutButton
 
     if (!props.withoutButton) {
@@ -30,10 +31,12 @@ export default function card (props) {
                 <p className="card-text">
                     Capacidade: { props.capacity } Alunos<br/>
                     Status: { props.available === 1 ? 'Disponível' : 'Indisponível' }<br/>
-                    { props.teacher ? `Professor: ${props.teacher}` : '' }<br/>
+                    { props.teacher ? `Professor(a): ${props.teacher}` : '' }<br/>
                     { props.teacher ? `Disciplina: ${props.discipline}` : '' }<br/>
+                    { props.day ? `Dia: ${props.day}` : '' }<br/>
+                    { props.allocation_hour ? `Horário: ${props.allocation_hour}` : '' }
                     { props.startAt && props.endAt ? `Dia: ${day}/${month}` : '' }<br/>
-                    { props.startAt && props.endAt ? `Horário: ${st} - ${ed}` : '' }
+                    { props.startAt && props.endAt ? `Horário: ${st} - ${ed}` : '' }<br/>
                 </p>
 
                 { withoutButton === false ?
@@ -47,6 +50,7 @@ export default function card (props) {
 
                 { props.editLink ? <a href={ props.editLink } className="btn btn-light card-link">Editar</a> : '' }
                 { props.aprove ? <button className="btn btn-primary card-link" onClick={props.aprove}>Aprovar</button> : '' }
+                { props.allocate ? <a href={ props.allocateLink } className="btn btn-info card-link">Alocar</a> : '' }
             </div>
         </div>
     )
