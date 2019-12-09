@@ -40,9 +40,14 @@ export default function navbar (props) {
                   <a className="nav-link" href="/app">Dashboard</a>
                 </li>
                 { getUserRole() === '5' ?
+                <>
                 <li className="nav-item">
                   <a className="nav-link" href="/saveRoom">Nova Sala</a>
                 </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="/saveUser">Novo Usuário</a>
+                </li>
+                </>
                 : ''}
                 <li className="nav-item dropdown">
                   <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="navDrop">{username}</a>

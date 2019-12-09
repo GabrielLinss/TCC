@@ -41,7 +41,7 @@ class UserController {
     const user = await User.create(data)
     if (!user) return response.status(400).json([{ message: 'Erro ao cadastrar usuário' }])
 
-    return response.json(user)
+    return response.status(201).json(user)
   }
 
   /**

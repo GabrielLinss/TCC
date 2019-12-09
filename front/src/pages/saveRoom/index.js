@@ -48,7 +48,7 @@ export default class SaveRoom extends Component {
     render() {
         return (
             <Fragment>
-                <Navbar page="Cadastrar" />
+                <Navbar page="Cadastrar Sala" />
 
                 <br/>
                 <br/>

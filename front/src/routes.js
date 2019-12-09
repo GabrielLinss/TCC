@@ -7,6 +7,7 @@ import App from './pages/app'
 import Room from './pages/room'
 import Reservation from './pages/reservation'
 import SaveRoom from './pages/saveRoom'
+import Signin from './pages/signin'
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -31,6 +32,7 @@ const Routes = () => (
       <PrivateRoute path="/solicitation/:id" component={Reservation} />
       <PrivateRoute path="/allocation/:allocateId" component={Reservation} />
       <PrivateRoute path="/saveRoom" component={SaveRoom} />
+      <PrivateRoute path="/saveUser" component={Signin} />
       <Route exact path="/room/:id" component={Room} />
       <Route path="*" component={() => <h1>Page not found</h1>} />
     </Switch>
