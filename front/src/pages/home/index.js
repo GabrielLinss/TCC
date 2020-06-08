@@ -4,18 +4,22 @@ import Jumbotron from '../../components/jumbotron'
 import Card from '../../components/card'
 import api from '../../services/api'
 import { isAuthenticated } from '../../services/auth'
+import { connect } from 'react-redux';
+import * as AllocationsActions from '../../store/actions/allocations';
+import { bindActionCreators } from 'redux';
 
-export default class Home extends Component {
+class Home extends Component {
   state = {
-    reservations: [],
-    allocations: []
+    reservations: []
   }
 
   loadReservations = async () => {
     const response = await api.get('/reservations?withDay=false')
     const response2 = await api.get('/reservations?withDay=true')
 
-    this.setState({ reservations: response.data, allocations: response2.data })
+    this.props.loadAllocations(response2.data);
+
+    this.setState({ reservations: response.data })
   }
 
   componentDidMount () {
@@ -63,7 +67,7 @@ export default class Home extends Component {
             <div className="col">
               <h2>Alocações</h2>
               <div className="row">
-                { this.state.allocations.length > 0 ? this.state.allocations.map(allocation => (
+                { this.props.allocations.length > 0 ? this.props.allocations.map(allocation => (
                   <div className="col-md-6 col-xs-12 col-sm-6" key={allocation.id}>
                     <Card link={`http://${window.location.host}/room/${allocation.room.id}`}
                     withoutButton={true} name={allocation.room.name} number={allocation.room.number}
@@ -89,3 +93,11 @@ export default class Home extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  allocations: state.allocations.data
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(AllocationsActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
