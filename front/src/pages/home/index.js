@@ -22,7 +22,7 @@ class Home extends Component {
     this.setState({ reservations: response.data })
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.loadReservations()
   }
 
@@ -32,59 +32,60 @@ class Home extends Component {
         <Navbar />
 
         <div className="container">
-          { isAuthenticated() ? '' :
-          <div className="row">
-            <div className="col-md-12 col-xs-12">
-              <Jumbotron />
+          {isAuthenticated() ? '' :
+            <div className="row">
+              <div className="col-md-12 col-xs-12">
+                <Jumbotron />
+              </div>
             </div>
-          </div>
           }
 
           <div className="row">
             <div className="col">
               <h2>Reservas</h2>
               <div className="row">
-                { this.state.reservations.length > 0 ? this.state.reservations.map(reservation => (
+                {this.state.reservations.length > 0 ? this.state.reservations.map(reservation => (
                   <div className="col-md-6 col-xs-12 col-sm-6" key={reservation.id}>
                     <Card link={`http://${window.location.host}/room/${reservation.room.id}`}
-                    withoutButton={true} name={reservation.room.name} number={reservation.room.number}
-                    capacity={reservation.room.capacity} blockName={reservation.room.block.name}
-                    blockNumber={reservation.room.block.number}
-                    available={reservation.room.available}
-                    teacher={reservation.user.username}
-                    discipline={reservation.discipline}
-                    day={reservation.day}
-                    startAt={reservation.start_at}
-                    endAt={reservation.end_at}/>
+                      withoutButton={true} name={reservation.room.name} number={reservation.room.number}
+                      capacity={reservation.room.capacity} blockName={reservation.room.block.name}
+                      blockNumber={reservation.room.block.number}
+                      available={reservation.room.available}
+                      teacher={reservation.user.username}
+                      discipline={reservation.discipline}
+                      day={reservation.day}
+                      startAt={reservation.start_at}
+                      endAt={reservation.end_at} />
                   </div>
                 )) :
                   <div className="col-md-12">
                     <h5>Nenhuma reserva.</h5>
-                  </div> }
+                  </div>}
               </div>
             </div>
 
             <div className="col">
               <h2>Alocações</h2>
               <div className="row">
-                { this.props.allocations.length > 0 ? this.props.allocations.map(allocation => (
+                {this.props.allocations.loading && <p>Carregando...</p>}
+                {this.props.allocations.data.length > 0 ? this.props.allocations.data.map(allocation => (
                   <div className="col-md-6 col-xs-12 col-sm-6" key={allocation.id}>
                     <Card link={`http://${window.location.host}/room/${allocation.room.id}`}
-                    withoutButton={true} name={allocation.room.name} number={allocation.room.number}
-                    capacity={allocation.room.capacity} blockName={allocation.room.block.name}
-                    blockNumber={allocation.room.block.number}
-                    available={allocation.room.available}
-                    teacher={allocation.teacher}
-                    discipline={allocation.discipline}
-                    day={allocation.day}
-                    allocation_hour={allocation.allocation_hour}
-                    startAt={allocation.start_at}
-                    endAt={allocation.end_at}/>
+                      withoutButton={true} name={allocation.room.name} number={allocation.room.number}
+                      capacity={allocation.room.capacity} blockName={allocation.room.block.name}
+                      blockNumber={allocation.room.block.number}
+                      available={allocation.room.available}
+                      teacher={allocation.teacher}
+                      discipline={allocation.discipline}
+                      day={allocation.day}
+                      allocation_hour={allocation.allocation_hour}
+                      startAt={allocation.start_at}
+                      endAt={allocation.end_at} />
                   </div>
                 )) :
                   <div className="col-md-12">
                     <h5>Nenhuma alocação.</h5>
-                  </div> }
+                  </div>}
               </div>
             </div>
           </div>
@@ -95,7 +96,7 @@ class Home extends Component {
 }
 
 const mapStateToProps = state => ({
-  allocations: state.allocations.data
+  allocations: state.allocations
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(AllocationsActions, dispatch);

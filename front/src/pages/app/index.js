@@ -48,7 +48,7 @@ export default class App extends Component {
     this.setState({ solicitations: response.data })
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.loadRooms()
     this.loadReservations()
     this.loadSolicitations()
@@ -99,23 +99,23 @@ export default class App extends Component {
     return (
       <Fragment>
         <Navbar page="Dashboard" />
-        <br/>
+        <br />
 
         <div className="container">
           <div className="row">
             <div className="col-md-12">
-                <h1>Solicitações de reserva</h1>
+              <h1>Solicitações de reserva</h1>
             </div>
           </div>
 
           <div className="row">
-            { this.state.solicitations.length === 0 ?
-            <div className="col-md-12">
+            {this.state.solicitations.length === 0 ?
+              <div className="col-md-12">
                 <h5>Nenhuma solicitação.</h5>
-            </div>
-            : this.state.solicitations.map(solicitation => (
+              </div>
+              : this.state.solicitations.map(solicitation => (
                 <div className="col-md-3 col-xs-12 col-sm-6" key={solicitation.id}>
-                  { getUserRole() === '5' ?
+                  {getUserRole() === '5' ?
                     <Card
                       link=""
                       cancel={() => this.cancelSolicitation(solicitation.id)}
@@ -132,7 +132,7 @@ export default class App extends Component {
                       startAt={solicitation.start_at}
                       endAt={solicitation.end_at}
                     />
-                  :
+                    :
                     <Card
                       link=""
                       cancel={() => this.cancelSolicitation(solicitation.id)}
@@ -150,23 +150,23 @@ export default class App extends Component {
                     />
                   }
                 </div>
-            )) }
+              ))}
           </div>
 
           <div className="row">
             <div className="col-md-12">
-                <h1>Salas reservadas</h1>
+              <h1>Salas reservadas</h1>
             </div>
           </div>
 
           <div className="row">
-            { this.state.reservations.length === 0 ?
-            <div className="col-md-12">
+            {this.state.reservations.length === 0 ?
+              <div className="col-md-12">
                 <h5>Nenhuma reserva.</h5>
-            </div>
-            : this.state.reservations.map(reservation => (
+              </div>
+              : this.state.reservations.map(reservation => (
                 <div className="col-md-3 col-xs-12 col-sm-6" key={reservation.id}>
-                    <Card
+                  <Card
                     link=""
                     cancel={() => this.cancelReservation(reservation.id)}
                     buttonName="Cancelar"
@@ -182,39 +182,36 @@ export default class App extends Component {
                     endAt={reservation.end_at}
                     day={reservation.day}
                     allocation_hour={reservation.allocation_hour}
-                    />
+                  />
                 </div>
-            )) }
+              ))}
           </div>
 
           <div className="row">
             <div className="col-md-12">
-                <h1>Salas disponíveis</h1>
+              <h1>Salas disponíveis</h1>
             </div>
           </div>
 
           <div className="row">
-            { this.state.rooms.map(room => (
-                <>
-                { getUserRole() === '5' ?
-                <div className="col-md-3 col-xs-12 col-sm-6" key={room.id}>
-                    <Card allocate={true}
+            {this.state.rooms.map(room => (
+              <div className="col-md-3 col-xs-12 col-sm-6" key={room.id}>
+                {getUserRole() === '5' ?
+                  <Card allocate={true}
                     allocateLink={`http://${window.location.host}/allocation/${room.id}`}
                     editLink={`http://${window.location.host}/room/${room.id}`}
                     link={`http://${window.location.host}/reservation/${room.id}`}
                     buttonName="Reservar" name={room.name} number={room.number}
                     capacity={room.capacity} blockName={room.block.name}
                     blockNumber={room.block.number} available={room.available} />
-                </div>
-                :
-                <div className="col-md-3 col-xs-12 col-sm-6" key={room.id}>
-                    <Card link={`http://${window.location.host}/solicitation/${room.id}`}
+                  :
+                  <Card link={`http://${window.location.host}/solicitation/${room.id}`}
                     buttonName="Solicitar Reserva" name={room.name} number={room.number}
                     capacity={room.capacity} blockName={room.block.name}
                     blockNumber={room.block.number} available={room.available} />
-                </div> }
-                </>
-            )) }
+                }
+              </div>
+            ))}
           </div>
         </div>
       </Fragment>

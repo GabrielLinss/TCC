@@ -32,19 +32,19 @@ export default class Reservation extends Component {
   }
 
   loadUser = async () => {
-      let id = getUserId()
-      id = parseInt(id)
+    let id = getUserId()
+    id = parseInt(id)
 
-      this.setState({ user_id: id })
+    this.setState({ user_id: id })
   }
 
   loadUsers = async () => {
     const response = await api.get('users?role_id=2')
-    console.log(response.data)
+
     this.setState({ users: response.data })
   }
 
-  componentDidMount () {
+  componentDidMount() {
     if (getUserRole() === '5') this.loadUsers()
 
     this.loadRoom()
@@ -93,66 +93,66 @@ export default class Reservation extends Component {
       <>
         <Navbar page={navbarBreadCrumb} />
 
-        <br/>
-        <br/>
+        <br />
+        <br />
         <div className="container">
           <div className="row">
             <div className="container">
-                {this.state.error && <p>{this.state.error}</p>}
-                <div className="row justify-content-center">
-                    <div className="col-md-6 col-xs-12">
-                      <form onSubmit={this.handleSubmit}>
-                        { getUserRole() === '5' ?
-                        <>
+              {this.state.error && <p>{this.state.error}</p>}
+              <div className="row justify-content-center">
+                <div className="col-md-6 col-xs-12">
+                  <form onSubmit={this.handleSubmit}>
+                    {getUserRole() === '5' ?
+                      <>
                         <div className="form-group">
                           <label htmlFor="InputTeacher">Nome do(a) professor(a) <small>Preencha este campo caso o professor não possua cadastro.</small></label>
-                          <input type="text" onChange={e => this.setState({ teacher: e.target.value })} className="form-control" id="InputTeacher" placeholder="Defina o professor que irá ministrar"/>
+                          <input type="text" onChange={e => this.setState({ teacher: e.target.value })} className="form-control" id="InputTeacher" placeholder="Defina o professor que irá ministrar" />
                         </div>
                         <div className="form-group">
                           <label htmlFor="InputUserId">Usuário</label>
-                            <select className="form-control" id="InputUserId" value={this.state.user} onChange={e => this.setState({ user: e.target.value })}>
-                              {
-                                this.state.users.map(user => (
-                                  <option value={user.id} key={user.id}>{user.username}</option>
-                                ))
-                              }
-                            </select>
+                          <select className="form-control" id="InputUserId" value={this.state.user} onChange={e => this.setState({ user: e.target.value })}>
+                            {
+                              this.state.users.map(user => (
+                                <option value={user.id} key={user.id}>{user.username}</option>
+                              ))
+                            }
+                          </select>
                         </div>
-                        </>
-                        : '' }
+                      </>
+                      : ''}
 
-                        { this.props.match.params.id ?
-                        <>
+                    {this.props.match.params.id ?
+                      <>
                         <div className="form-row">
                           <div className="form-group col-md-6">
                             <label htmlFor="InputStartAtDate">Data de início</label>
-                            <input type="date" onChange={e => this.setState({ start_at_date: e.target.value })} className="form-control" id="InputStartAtDate" aria-describedby="startAtDateHelp" placeholder="Defina a data"/>
+                            <input type="date" onChange={e => this.setState({ start_at_date: e.target.value })} className="form-control" id="InputStartAtDate" aria-describedby="startAtDateHelp" placeholder="Defina a data" />
                           </div>
                           <div className="form-group col-md-6">
                             <label htmlFor="InputStartAtHour">Hora de início</label>
-                            <input type="time" onChange={e => this.setState({ start_at_hour: e.target.value })} className="form-control" id="InputStartAtHour" aria-describedby="startAtHourHelp" placeholder="Defina o horário"/>
+                            <input type="time" onChange={e => this.setState({ start_at_hour: e.target.value })} className="form-control" id="InputStartAtHour" aria-describedby="startAtHourHelp" placeholder="Defina o horário" />
                           </div>
                         </div>
 
                         <div className="form-row">
                           <div className="form-group col-md-6">
                             <label htmlFor="InputEndAtDate">Data de término</label>
-                            <input type="date" onChange={e => this.setState({ end_at_date: e.target.value })} className="form-control" id="InputEndAtDate" aria-describedby="endAtDateHelp" placeholder="Defina a data"/>
+                            <input type="date" onChange={e => this.setState({ end_at_date: e.target.value })} className="form-control" id="InputEndAtDate" aria-describedby="endAtDateHelp" placeholder="Defina a data" />
                           </div>
                           <div className="form-group col-md-6">
                             <label htmlFor="InputEndAtHour">Hora de término</label>
-                            <input type="time" onChange={e => this.setState({ end_at_hour: e.target.value })} className="form-control" id="InputEndAtHour" aria-describedby="endAtHourHelp" placeholder="Defina o horário"/>
+                            <input type="time" onChange={e => this.setState({ end_at_hour: e.target.value })} className="form-control" id="InputEndAtHour" aria-describedby="endAtHourHelp" placeholder="Defina o horário" />
                           </div>
                         </div>
-                        </>
-                        : ''}
+                      </>
+                      : ''}
 
-                        <div className="form-group">
-                          <label htmlFor="InputDiscipline">{ this.props.match.params.id ? 'Disciplina/Atividade/Evento' : 'Disciplina' }</label>
-                          <input type="text" onChange={e => this.setState({ discipline: e.target.value })} className="form-control" id="InputDiscipline" placeholder="Defina a disciplina a ser ministrada ou evento"/>
-                        </div>
-                        { this.props.match.params.allocateId ?
-                        <>
+                    <div className="form-group">
+                      <label htmlFor="InputDiscipline">{this.props.match.params.id ? 'Disciplina/Atividade/Evento' : 'Disciplina'}</label>
+                      <input type="text" onChange={e => this.setState({ discipline: e.target.value })} className="form-control" id="InputDiscipline" placeholder="Defina a disciplina a ser ministrada ou evento" />
+                    </div>
+                    {this.props.match.params.allocateId ?
+                      <>
                         <div className="form-group">
                           <label htmlFor="InputDay">Dia da semana</label>
                           <select className="form-control" id="InputDay" onChange={e => this.setState({ day: e.target.value })}>
@@ -174,13 +174,13 @@ export default class Reservation extends Component {
                             <option value="20:00-22:00">20:00-22:00</option>
                           </select>
                         </div>
-                        </>
-                        : '' }
+                      </>
+                      : ''}
 
-                        <button type="submit" className="btn btn-primary">{buttonName}</button>
-                      </form>
-                    </div>
+                    <button type="submit" className="btn btn-primary">{buttonName}</button>
+                  </form>
                 </div>
+              </div>
             </div>
           </div>
         </div>
